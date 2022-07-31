@@ -15,19 +15,20 @@ import { send } from 'process';
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
 
-  app.get( "/filteredimage/", async ( req, res ) => {
+  app.get( "/filteredimage/", async ( req, res, next ) => {
     let { image_url } = req.query;
 
     if ( !image_url ) {
       return res.status(400)
                 .send(`URL is required`);
     }
-    
+    try {
     const filteredpath = await filterImageFromURL(image_url);
     res.sendFile(filteredpath, function() {deleteLocalFiles([filteredpath])});
-    
-
-  } );
+    } catch (error) {
+      next();
+    }
+  });
 
   // @TODO1 IMPLEMENT A RESTFUL ENDPOINT
   // GET /filteredimage?image_url={{URL}}
