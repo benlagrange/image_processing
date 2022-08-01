@@ -1,4 +1,4 @@
-import express from 'express';
+import express, {Request, Response, NextFunction} from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
 import { RSA_NO_PADDING } from 'constants';
@@ -15,8 +15,8 @@ import { send } from 'process';
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
 
-  app.get( "/filteredimage/", async ( req, res, next ) => {
-    let { image_url } = req.query;
+  app.get( "/filteredimage/", async ( req: Request, res: Response, next: NextFunction ) => {
+    const { image_url } :{image_url:string} = req.query
 
     if ( !image_url ) {
       return res.status(400)
